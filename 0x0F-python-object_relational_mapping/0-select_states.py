@@ -1,52 +1,23 @@
 #!/usr/bin/python3
+""" Script that lists all states using MySQLdb"""
 
-
-"""
-    Module to print list of states from a database
-"""
-
-
-import argparse
 import MySQLdb
+from sys import argv
 
 
-def list_states(username, password, database):
-
-    try:
-        connection = MySQLdb.connect(
-                user=username,
-                passwd=password,
-                db=database,
-                host='localhost',
-                port=3306)
-
-        cursor = connection.cursor()
-
-        cursor.execute('SELECT * FROM states ORDER BY id ASC')
-
-        result = cursor.fetchall()
-
-        for name in result:
-            print(name)
-
-    except MySQLdb.Error as e:
-        print(f"Error: {e}")
-
-    finally:
-        cursor.close()
-        connection.close()
-
-
-def main():
-    parser = argparse.ArgumentParser(
-            description='List all states from a MySQL database.')
-    parser.add_argument('username', type=str, help='MySQL username')
-    parser.add_argument('password', type=str, help='MySQL password')
-    parser.add_argument('database', type=str, help='Database name')
-    args = parser.parse_args()
-
-    list_states(args.username, args.password, args.database)
-
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    HOST = "localhost"
+    PORT = 3306
+    MY_USER = argv[1]
+    MY_PSWD = argv[2]
+    MY_DB = argv[3]
+    db = MySQLdb.connect(host=HOST, user=MY_USER, password=MY_PSWD,
+                         db=MY_DB, port=PORT)
+    cur = db.cursor()
+    query = "SELECT * FROM states ORDER BY id"
+    cur.execute(query)
+    rowquery = cur.fetchall()
+    for q in rowquery:
+        print(q)
+    cur.close()
+    db.close()
