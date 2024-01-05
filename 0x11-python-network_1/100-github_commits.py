@@ -1,14 +1,18 @@
 #!/usr/bin/python3
-"""
-Python script that takes 2 arguments in order to solve the given challenge
-"""
+"""takes my Github credentials (username and password)"""
 import requests
 from sys import argv
 
-if __name__ == '__main__':
-    url = "https://api.github.com/repos/{}/{}/commits".format(argv[2], argv[1])
-    r = requests.get(url)
-    commits = r.json()
-    for commit in commits[:10]:
-        print(commit.get('sha'), end=': ')
-        print(commit.get('commit').get('author').get('name'))
+if __name__ == "__main__":
+    repository_name = argv[1]
+    owner_name = argv[2]
+    r = requests.get(
+        'https://api.github.com/repos/{:}/{:}/commits'.format(
+            owner_name, repository_name)).json()
+    if len(r) > 10:
+        limit = 10
+    else:
+        limit = len(r)
+    for item in range(limit):
+        print("{:}: {:}".format(r[item].get('sha'), r[item].get(
+            'commit').get('author').get('name')))
